@@ -12,17 +12,32 @@ A move specifies two bottle indices, from and to. It always transfers as many la
 
 import { Heap } from './heap.js'
 
-class Lookup extends Set {
+class Lookup {
+	constructor() {
+		this.data = {}
+	}
 	#toKey(gamestate) {
 		var key = gamestate.map(JSON.stringify)
 		key.sort()
 		return JSON.stringify(key)
 	}
-	add(gamestate) {
-		super.add(this.#toKey(gamestate))
+	alreadySeen(gamestate, length) {
+		let key = this.#toKey(gamestate)
+		if (this.data.hasOwnProperty(key)) {
+			let seenLength = this.data[key]
+			if (length < seenLength) {
+				this.data[key] = length
+				return false
+			}
+			return true
+		}
+		else {
+			this.data[key] = length
+			return false
+		}
 	}
-	has(gamestate) {
-  		return super.has(this.#toKey(gamestate))
+	size() {
+		return Object.keys(this.data).length
 	}
 }
 
@@ -228,13 +243,9 @@ class Solver {
 		this.todos = todos
 		this.onNewSolutionFound = onNewSolutionFound
 		this.onFinished = onFinished
-		
-		this.sholdStop = false
+
 		this.bestSolution = null
 		this.seen = new Lookup()
-	}
-	stop() {
-		this.sholdStop = true
 	}
 	solve() {
 		this.todos.push([], this.initialGamestate)
@@ -244,16 +255,12 @@ class Solver {
 			var path = element[0]
 			var gamestate = element[1]
 
-			if (this.shouldStop) {
-				break
-			}
-
-			if (this.bestSolution !== null && this.bestSolution.length < path.length) {
+			if (this.bestSolution !== null && this.bestSolution.length <= path.length) {
 				continue
 			}
 			
 			if (iterationCount % 100000 === 0) {
-				console.log("Worker status:", iterationCount, this.todos.size(), this.seen.size, path.length)
+				console.log("Worker status:", iterationCount, this.todos.size(), this.seen.size(), path.length)
 			}
 			iterationCount += 1
 
@@ -265,10 +272,11 @@ class Solver {
 					continue
 				}
 			}
-			if (this.seen.has(gamestate)) {
+
+			if (this.seen.alreadySeen(gamestate, path.length)) {
 				continue
 			}
-			this.seen.add(gamestate)
+			
 			var moves = getMoves(gamestate)
 			for (var i = 0; i < moves.length; i++) {
 				var newState = makeMove(moves[i], gamestate)

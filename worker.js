@@ -2,6 +2,21 @@ import { Solver, TodoQueue, TodoStack, TodoHeap } from './engine.js'
 
 var solver = null
 
+function getTodo(algorithm) {
+	if (algorithm === "astar") {
+		return new TodoHeap()
+	}
+	else if (algorithm === "bfs") {
+		return new TodoQueue()
+	}
+	else if (algorithm === "dfs") {
+		return new TodoStack()
+	}
+	else {
+		throw new Error("Unknown algorithm", algorithm)
+	}
+}
+
 self.addEventListener(
 	'message',
 	function(e) {
@@ -13,9 +28,9 @@ self.addEventListener(
 			}
 			solver = new Solver(
 				e.data.task,
-				new TodoHeap(),
-				(newSolution) => self.postMessage(JSON.stringify(newSolution)),
-				() => {}
+				getTodo(e.data.algorithm),
+				(newSolution) => self.postMessage(newSolution),
+				() => console.log("Solving finished")
 			)
 			solver.solve()
 		}

@@ -2,7 +2,7 @@
 <head>
 <script type="module" src="script.js"></script>
 <style type="text/css">
-	button {
+	select {
 		display: block;
 	}
 </style>
@@ -23,6 +23,11 @@
 ]
 </textarea>
 <textarea id="solution" rows="15" cols="50"></textarea>
+<select name="Algorithm" id="algorithm">
+	<option value="astar">A* (slow)</option>
+	<option value="bfs">BFS (very slow)</option>
+	<option value="dfs" selected="selected">DFS (fast)</option>
+</select>
 <button id="solveButton">Solve</button>
 <button id="stopButton">Stop</button>
 </body>
