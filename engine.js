@@ -155,7 +155,7 @@ function isSolved(gamestate) {
 function getMoves(gamestate) {
 	const result = []
 	for (var i = 0; i < gamestate.length; i++) {
-		if (gamestate[i][0] == 0) {
+		if (gamestate[i][0] === 0) {
 			// from-bottle is empty
 			continue
 		}
@@ -183,6 +183,16 @@ function getMoves(gamestate) {
 			var toColor = getTopColor(toBottle)
 			if (fromColor[0] !== toColor[0]) {
 				// can't move to different color
+				continue
+			}
+			var hasSpace = true
+			for (var k = 0; k < fromColor[1]; k++) {
+				if (toBottle[toBottle.length - k - 1] !== 0) {
+					hasSpace = false
+					break
+				}
+			}
+			if (!hasSpace) {
 				continue
 			}
 			result.push([i, j])
@@ -285,6 +295,7 @@ class Solver {
 				this.todos.push(newPath, newState)
 			}
 		}
+		console.log("Worker finished after", iterationCount, "iterations")
 		this.onFinished()
 		return iterationCount
 	}

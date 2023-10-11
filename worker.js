@@ -29,8 +29,8 @@ self.addEventListener(
 			solver = new Solver(
 				e.data.task,
 				getTodo(e.data.algorithm),
-				(newSolution) => self.postMessage(newSolution),
-				() => console.log("Solving finished")
+				(newSolution) => self.postMessage({"event": "solution", "data": newSolution}),
+				() => self.postMessage({"event": "finished"})
 			)
 			solver.solve()
 		}

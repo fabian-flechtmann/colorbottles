@@ -8,27 +8,21 @@
 </style>
 </head>
 <body>
-<textarea id="task" rows="15" cols="50">[
-	[3, 2, 1, 1],
-	[3, 5, 4, 2],
-	[6, 8, 7, 6],
-	[6, 6, 8, 1],
-	[7, 5, 8, 2],
-	[3, 4, 3, 5],
-	[8, 7, 9, 5],
-	[2, 4, 4, 9],
-	[1, 7, 9, 9],
-	[0, 0, 0, 0],
-	[0, 0, 0, 0]
-]
+<textarea id="task" rows="15" cols="50">
 </textarea>
 <textarea id="solution" rows="15" cols="50"></textarea>
+<select name="Puzzle" id="puzzle">
+	<option value="puzzle1">Puzzle 1</option>
+	<option value="puzzle2">Puzzle 2</option>
+	<option value="puzzle3">Puzzle 3</option>
+</select>
 <select name="Algorithm" id="algorithm">
-	<option value="astar">A* (slow)</option>
-	<option value="bfs">BFS (very slow)</option>
-	<option value="dfs" selected="selected">DFS (fast)</option>
+	<option value="astar">A*</option>
+	<option value="bfs" selected="selected">BFS</option>
+	<option value="dfs">DFS</option>
 </select>
 <button id="solveButton">Solve</button>
 <button id="stopButton">Stop</button>
+<img src="spinner.gif" id="spinner" style="display: none"/>
 </body>
 </html>
