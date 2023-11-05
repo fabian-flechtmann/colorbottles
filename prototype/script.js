@@ -54,6 +54,26 @@ const puzzle3 = `[
 	[0, 0, 0, 0]
 ]`
 
+const puzzle4 = `[
+	[5, 5, 4, 3, 2, 1],
+	[1, 9, 8, 7, 7, 6],
+	[11, 1, 5, 10, 2, 8],
+	[14, 13, 2, 12, 8, 12],
+	[4, 14, 3, 12, 1, 3],
+	[11, 3, 11, 8, 14, 6],
+	[4, 4, 10, 4, 13, 14],
+	[12, 11, 13, 11, 7, 13],
+	[3, 7, 8, 10, 10, 9],
+	[9, 9, 5, 8, 3, 6],
+	[7, 2, 6, 2, 13, 12],
+	[7, 4, 6, 5, 9, 1],
+	[11, 14, 10, 2, 9, 1],
+	[10, 13, 14, 12, 6, 5],
+	
+	[0, 0, 0, 0, 0, 0],
+	[0, 0, 0, 0, 0, 0]
+]`
+
 puzzleSelect.onchange = function() {
 	if (this.value === "puzzle1") {
 		taskArea.textContent = puzzle1
@@ -63,6 +83,9 @@ puzzleSelect.onchange = function() {
 	}
 	else if (this.value === "puzzle3") {
 		taskArea.textContent = puzzle3
+	}
+	else if (this.value === "puzzle4") {
+		taskArea.textContent = puzzle4
 	}
 	else {
 		console.log("unknown value", this.value)
@@ -116,6 +139,7 @@ stopButton.onclick = function() {
 		console.log("Terminating worker, might take a second ...")
 		worker.terminate()
 		worker = null
+		const msPassed = Date.now() - timestamp
 		solutionArea.textContent += "\n\nWorker manually stopped after " + msPassed + " ms"
 	}
 	spinnerImg.style.display = "none"

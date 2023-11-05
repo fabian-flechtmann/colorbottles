@@ -1,0 +1,33 @@
+Colorbottles - Game Design Ideas
+
+Main points
+* Dark mode (very important)
+* Start the game with 10 bottles, 2 empty, 8 colors, height 4, randomly shuffled
+* "New game" button
+	* Shows a modal window
+	* Enter number of bottles, number of colors, height
+		* Should be prefilled with the current level parameters
+	* (optional) Enter custom level code
+	* Press "Start game"
+		* (optional) check newly generated level if it can actually be solved
+* "Level code" is displayed and can be used to share a cool level
+	* Level code should be easy to reverse engineer so smart kids can design their own levels
+* "Hint" button
+	* Solves the game in the background, shows a spinner
+	* Blocks interaction while thinking
+	* Shows how many moves are needed to win or that is game can't be won
+	* Does the best move in the position
+	* (Optional) cache the entire solution if "Hint" is pressed again, invalidate on user move
+* "Undo" button
+	* Goes back one move
+	* Move might have been manual or hint
+	* Can go back all the way to the beginning of the level
+* Moves
+	* Every bottle is a button
+	* Once pressed, the bottle is highlighted
+	* Every possible target bottle is highlighted in a different color
+	* Clicking a different bottle highlights that bottle instead
+	* Clicking a target bottle does the move and then removes all highlights
+* Game over
+	* When the level is solved, show a message but don't do anything else
+	* When the player is out of moves, show a message but don't do anything else
