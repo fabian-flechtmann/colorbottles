@@ -215,8 +215,8 @@ function sortMoves(moves, gamestate, path) {
 	Solutions become much prettier when prioritising these moves
 	1. Finishing a bottle
 	2. Emptying a bottle
-	3. Continuing with the same color (would need code restructuring)
-	4. All other moves, prefer to move to close column
+	3. Continuing with the same color
+	4. All other moves, prefer to move to nearby column
 
 	*/
 
