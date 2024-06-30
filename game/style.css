@@ -1,0 +1,80 @@
+body {
+	background-color: #424242;
+}
+
+#gameTable {
+	border-spacing: 10px 0px;
+}
+
+.box {
+	margin: 0;
+	border-style: solid;
+	border-color: black;
+	border-bottom-width: 0px;
+	border-left-width: 3px;
+	border-right-width: 3px;
+	border-top-width: 0px;
+	padding: 20px 30px;
+}
+
+.first > .box {
+	border-top-width: 3px;
+}
+
+.last > .box {
+	border-bottom-width: 3px;
+}
+
+.box .highlighted {
+
+}
+
+.color1 {
+	/* yellow */
+	background-color: #ffbe0b;
+}
+
+.color2 {
+	/* orange */
+	background-color: #f18701;
+}
+
+.color3 {
+	/* red */
+	background-color: #e63946;
+}
+
+.color4 {
+	/* purple */
+	background-color: #8338ec;
+}
+
+.color5 {
+	/* blue */
+	background-color: #3a86ff;
+}
+
+.color6 {
+	/* green */
+	background-color: #38b000;
+}
+
+.color7 {
+	/* brown */
+	background-color: #a98467;
+}
+
+.color8 {
+	/* light blue */
+	background-color: #ade8f4;
+}
+
+.color9 {
+	/* grey */
+	background-color: #8d99ae;
+}
+
+.color10 {
+	/* slime */
+	background-color: #d9ed92;
+}

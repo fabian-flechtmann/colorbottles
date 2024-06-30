@@ -118,7 +118,6 @@ solveButton.onclick = function() {
 				solutionArea.textContent += "\n\n" + JSON.stringify(e.data.data)
 			}
 			else if (e.data.event == "finished") {
-
 				solutionArea.textContent += "\n\nWorker finished after " + msPassed + " ms"
 				spinnerImg.style.display = "none"
 			}
