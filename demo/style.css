@@ -21,6 +21,10 @@ button {
 	margin-top: 10px;
 }
 
+a {
+	margin-left: 10px;
+}
+
 .box {
 	margin: 0;
 	border-style: solid;

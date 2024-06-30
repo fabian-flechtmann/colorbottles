@@ -8,6 +8,13 @@ Example gamestate: [[1, 2, 0], [2, 1, 0], [1, 2, 0], [0, 0, 0]]
 
 Move:
 A move specifies two bottle indices, from and to. It always transfers as many layers as possible.
+
+TODO the engine could prioritize moves
+* ones that empty a bottle
+* ones that complete a bottle
+* when completing a bottle, move smaller part to larger part
+* keep using the same color as in the previous move
+
 */
 
 import { Heap } from './heap.js'
