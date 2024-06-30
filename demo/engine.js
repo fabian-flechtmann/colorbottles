@@ -205,6 +205,72 @@ function getMoves(gamestate) {
 			result.push([i, j])
 		}
 	}
+
+	return result
+}
+
+function sortMoves(moves, gamestate, path) {
+	/*
+
+	Solutions become much prettier when prioritising these moves
+	1. Finishing a bottle
+	2. Emptying a bottle
+	3. Continuing with the same color (would need code restructuring)
+	4. All other moves, prefer to move to close column
+
+	*/
+
+	var finishingMoves = []
+	for (var i = 0; i < moves.length; i++) {
+		var to = moves[i][1]
+		var newState = makeMove(moves[i], gamestate)
+		if (isBottleDone(newState[to])) {
+			finishingMoves.push(i)
+		}
+	}
+
+	var emptyingMoves = []
+	for (var i = 0; i < moves.length; i++) {
+		if (finishingMoves.includes(i)) {
+			continue
+		}
+		var from = moves[i][0]
+		var newState = makeMove(moves[i], gamestate)
+		if (isBottleEmpty(newState[from])) {
+			emptyingMoves.push(i)
+		}
+	}
+
+	var sameColorMoves = []
+	if (path.length !== 0) {
+		var lastColor = getTopColor(path[path.length - 1][1])
+		for (var i = 0; i < moves.length; i++) {
+			if (path.length == 0) {
+				continue
+			}
+			if (finishingMoves.includes(i) || emptyingMoves.includes(i)) {
+				continue
+			}
+			if (lastColor === getTopColor(moves[i][0])) {
+				sameColorMoves.push(i)
+			}
+		}
+	}
+
+	var otherMoves = []
+	for (var i = 0; i < moves.length; i++) {
+		if (finishingMoves.includes(i) || emptyingMoves.includes(i) || sameColorMoves.includes(i)) {
+			continue
+		}
+		otherMoves.push(i)
+	}
+	otherMoves.sort((a, b) => Math.abs(a - b))
+
+	var result = []
+	result.push(...finishingMoves.map((i) => moves[i]))
+	result.push(...emptyingMoves.map((i) => moves[i]))
+	result.push(...sameColorMoves.map((i) => moves[i]))
+	result.push(...otherMoves.map((i) => moves[i]))
 	return result
 }
 
@@ -295,10 +361,11 @@ class Solver {
 			}
 			
 			var moves = getMoves(gamestate)
-			for (var i = 0; i < moves.length; i++) {
-				var newState = makeMove(moves[i], gamestate)
+			var sortedMoves = sortMoves(moves, gamestate, path)
+			for (var i = 0; i < sortedMoves.length; i++) {
+				var newState = makeMove(sortedMoves[i], gamestate)
 				var newPath = [...path]
-				newPath.push(moves[i])
+				newPath.push(sortedMoves[i])
 				this.todos.push(newPath, newState)
 			}
 		}
