@@ -1,4 +1,4 @@
-Colorbottles - Game Design Ideas
+Colorbottles - Game Ideas
 
 Main points
 * Dark mode (very important)
