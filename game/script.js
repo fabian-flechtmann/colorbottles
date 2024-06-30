@@ -134,20 +134,46 @@ function solve() {
 }
 
 newPuzzleButton.onclick = function() {
-	generateNewPuzzle(4, 8, 2)
+	generateNewPuzzle(5, 8, 2)
 	draw()
 	solve()
 }
 
 nextStepButton.onclick = function() {
-	nextMove += 1
+	if (solution !== null && nextMove < solution.length) {
+		nextMove += 1
+	}
 	draw()
 }
 
 prevStepButton.onclick = function() {
-	nextMove -= 1
+	if (solution !== null && 0 < nextMove) {
+		nextMove -= 1
+	}
 	draw()
 }
+
+window.addEventListener("keydown", function (event) {
+	if (event.defaultPrevented) {
+	return; // Do nothing if the event was already processed
+	}
+	switch (event.key) {
+		case "Enter":
+			newPuzzleButton.onclick()
+			break;
+		case "ArrowLeft":
+			prevStepButton.onclick()
+			break;
+		case "ArrowRight":
+			nextStepButton.onclick()
+			break;
+		default:
+			return;
+  }
+
+  // Cancel the default action to avoid it being handled twice
+  event.preventDefault();
+}, true);
 
 window.onload = function() {
 	newPuzzleButton.onclick()
