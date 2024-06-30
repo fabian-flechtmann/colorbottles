@@ -6,11 +6,27 @@ Have a loop: Generate puzzle, generate solution, play solution
 
 */
 
+import { makeMove } from './engine.js'
+
 var worker = null
 
+var puzzle = null
+var solution = null
+var nextMove = 0
+
 const gameTable = document.getElementById("gameTable")
+const statusLine = document.getElementById("statusLine")
+const newPuzzleButton = document.getElementById("newPuzzleButton")
+const nextStepButton = document.getElementById("nextStepButton")
+const prevStepButton = document.getElementById("prevStepButton")
 
 function generateNewPuzzle(height, width, empty) {
+	newPuzzleButton.disabled = true
+
+	puzzle = null
+	solution = null
+	nextMove = 0
+
 	var buffer = []
 	for (var i = 0; i < height; i++) {
 		for (var j = 0; j < width; j++) {
@@ -31,12 +47,26 @@ function generateNewPuzzle(height, width, empty) {
 		}
 		result.push(col)
 	}
-	return result
+	puzzle = result
 }
 
-function draw(table, puzzle) {
-	var width = puzzle.length
-	var height = puzzle[0].length
+function draw() {
+	if (solution === null) {		
+		nextStepButton.disabled = true
+		prevStepButton.disabled = true
+	} else {
+		statusLine.innerHTML = "Solution found, at step " + nextMove + " of " + solution.length
+		nextStepButton.disabled = nextMove === solution.length
+		prevStepButton.disabled = nextMove === 0
+	}
+
+	var state = puzzle
+	for (var i = 0; i < nextMove; i++) {
+		state = makeMove(solution[i], state)
+	}
+
+	var width = state.length
+	var height = state[0].length
 	
 	var result = ``
 	for (var i = 0; i < height; i++) {
@@ -48,13 +78,12 @@ function draw(table, puzzle) {
 			result += `<tr>`
 		}
 		for (var j = 0; j < width; j++) {
-			var color = puzzle[j][i]
+			var color = state[j][height-i-1]
 			result += `<td class="box color` + color + `"></td>`
 		}
 		result += `</tr>`
 	}
-	console.log(result)
-	table.innerHTML = result
+	gameTable.innerHTML = result
 }
 
 function shuffle(array) {
@@ -73,18 +102,53 @@ function shuffle(array) {
   }
 }
 
-window.onload = function() {
-	console.log("its go time")
-	while (true) {
-		var puzzle = generateNewPuzzle(4, 8, 2)
-		console.log(puzzle)
-		draw(gameTable, puzzle) 
-		var solution = solve(puzzle)
-		if (solution === null) {
-			showUnsolvable()
-		} else {
-			show(solution)
-		}
-		break
+function solve() {
+	statusLine.innerHTML = "Solving ..."
+
+	if (worker !== null) {
+		console.log("Terminating previous worker ...")
+		worker.terminate()
 	}
+
+	worker = new Worker("worker.js", { type: "module" })
+
+	worker.addEventListener(
+		"message",
+		function(e) {
+			if (e.data.event == "solution") {
+				solution = e.data.data
+			}
+			else if (e.data.event == "finished") {
+				newPuzzleButton.disabled = false
+				if (solution === null) {
+					statusLine.innerHTML = "Puzzle could not be solved"
+				} else {
+					draw()
+				}
+			}
+		},
+		false
+	)
+
+	worker.postMessage({"cmd": "solve", "algorithm": "bfs", "task": puzzle})
+}
+
+newPuzzleButton.onclick = function() {
+	generateNewPuzzle(4, 8, 2)
+	draw()
+	solve()
+}
+
+nextStepButton.onclick = function() {
+	nextMove += 1
+	draw()
+}
+
+prevStepButton.onclick = function() {
+	nextMove -= 1
+	draw()
+}
+
+window.onload = function() {
+	newPuzzleButton.onclick()
 }

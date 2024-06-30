@@ -301,4 +301,4 @@ class Solver {
 	}
 }
 
-export { Solver, TodoQueue, TodoStack, TodoHeap }
+export { Solver, TodoQueue, TodoStack, TodoHeap, makeMove }
