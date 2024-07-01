@@ -136,7 +136,7 @@ function solve() {
 }
 
 newPuzzleButton.onclick = function() {
-	generateNewPuzzle(5, 8, 2)
+	generateNewPuzzle(6, 8, 2)
 	draw()
 	solve()
 }

@@ -216,6 +216,7 @@ function sortMoves(moves, gamestate, path) {
 	1. Continuing with the same color
 	2. Finishing a bottle
 	3. Emptying a bottle
+	4. TODO move to pure bottle, rank by how full the bottle is already
 	4. All other moves, prefer to move to nearby column
 
 	*/
