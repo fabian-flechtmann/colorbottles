@@ -212,16 +212,34 @@ function getMoves(gamestate) {
 function sortMoves(moves, gamestate, path) {
 	/*
 
-	Solutions become much prettier when prioritising these moves
-	1. Finishing a bottle
-	2. Emptying a bottle
-	3. Continuing with the same color
+	Solutions become prettier when prioritising moves
+	1. Continuing with the same color
+	2. Finishing a bottle
+	3. Emptying a bottle
 	4. All other moves, prefer to move to nearby column
 
 	*/
 
+	var sameColorMoves = []
+	if (path.length !== 0) {
+		var lastTo = path[path.length - 1][1]
+		var lastColor = getTopColor(gamestate[lastTo])[0]
+		if (lastColor == 0) {
+			console.log("last color is 0")
+		}
+		for (var i = 0; i < moves.length; i++) {
+			var from = moves[i][0]
+			if (lastColor === getTopColor(gamestate[from])[0]) {
+				sameColorMoves.push(i)
+			}
+		}
+	}
+
 	var finishingMoves = []
 	for (var i = 0; i < moves.length; i++) {
+		if (sameColorMoves.includes(i)) {
+			continue
+		}
 		var to = moves[i][1]
 		var newState = makeMove(moves[i], gamestate)
 		if (isBottleDone(newState[to])) {
@@ -231,7 +249,7 @@ function sortMoves(moves, gamestate, path) {
 
 	var emptyingMoves = []
 	for (var i = 0; i < moves.length; i++) {
-		if (finishingMoves.includes(i)) {
+		if (sameColorMoves.includes(i) || finishingMoves.includes(i)) {
 			continue
 		}
 		var from = moves[i][0]
@@ -241,25 +259,9 @@ function sortMoves(moves, gamestate, path) {
 		}
 	}
 
-	var sameColorMoves = []
-	if (path.length !== 0) {
-		var lastColor = getTopColor(path[path.length - 1][1])
-		for (var i = 0; i < moves.length; i++) {
-			if (path.length == 0) {
-				continue
-			}
-			if (finishingMoves.includes(i) || emptyingMoves.includes(i)) {
-				continue
-			}
-			if (lastColor === getTopColor(moves[i][0])) {
-				sameColorMoves.push(i)
-			}
-		}
-	}
-
 	var otherMoves = []
 	for (var i = 0; i < moves.length; i++) {
-		if (finishingMoves.includes(i) || emptyingMoves.includes(i) || sameColorMoves.includes(i)) {
+		if (sameColorMoves.includes(i) || emptyingMoves.includes(i) || finishingMoves.includes(i)) {
 			continue
 		}
 		otherMoves.push(i)
@@ -267,9 +269,9 @@ function sortMoves(moves, gamestate, path) {
 	otherMoves.sort((a, b) => Math.abs(a - b))
 
 	var result = []
+	result.push(...sameColorMoves.map((i) => moves[i]))
 	result.push(...finishingMoves.map((i) => moves[i]))
 	result.push(...emptyingMoves.map((i) => moves[i]))
-	result.push(...sameColorMoves.map((i) => moves[i]))
 	result.push(...otherMoves.map((i) => moves[i]))
 	return result
 }

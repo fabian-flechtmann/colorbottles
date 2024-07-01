@@ -48,6 +48,7 @@ function generateNewPuzzle(height, width, empty) {
 		result.push(col)
 	}
 	puzzle = result
+	console.log("Puzzle: " + JSON.stringify(puzzle))
 }
 
 function draw() {
@@ -117,6 +118,7 @@ function solve() {
 		function(e) {
 			if (e.data.event == "solution") {
 				solution = e.data.data
+				console.log("Solution: " + JSON.stringify(solution))
 			}
 			else if (e.data.event == "finished") {
 				newPuzzleButton.disabled = false
