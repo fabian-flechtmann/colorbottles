@@ -38,8 +38,11 @@ a {
 }
 
 .box.highlight {
-	border-left-color: white;
-	border-right-color: white;
+	border-color: white;
+}
+
+.first > .box.highlight {
+	border-top-color: white;
 }
 
 .first > .box {
