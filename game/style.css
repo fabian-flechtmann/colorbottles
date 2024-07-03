@@ -15,23 +15,15 @@ body {
 	margin-left: 1em;
 }
 
-#newPuzzleButton {
-	margin-left: 1em;
-}
-
-button {
-	margin-top: 1em;
-}
-
-a {
+div.row {
 	display: block;
-	margin: 1em;
+	padding-top: 1em;
+	padding-left: 2em;
 }
 
 .box {
 	border-style: solid;
 	border-color: black;
-	border-top-color: #424242;
 }
 
 .box.highlight {
