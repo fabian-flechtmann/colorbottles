@@ -237,8 +237,26 @@ function sortMoves(moves, gamestate, path) {
 		var lastTo = path[path.length - 1][1]
 	}
 
+	var toPureBottleSameColorMoves = []
+	if (path.length !== 0) {
+		var lastColor = getTopColor(gamestate[lastTo])[0]
+		if (lastColor == 0) {
+			console.log("last color is 0")
+		}
+		for (var i = 0; i < moves.length; i++) {
+			var from = moves[i][0]
+			var to = moves[i][1]
+			if (lastColor === getTopColor(gamestate[from])[0] && isBottlePure(gamestate[to])) {
+				toPureBottleSameColorMoves.push(i)
+			}
+		}
+	}
+
 	var toPureBottleMoves = []
 	for (var i = 0; i < moves.length; i++) {
+		if (toPureBottleSameColorMoves.includes(i)) {
+			continue
+		}
 		var to = moves[i][1]
 		if (isBottlePure(gamestate[to])) {
 			toPureBottleMoves.push(i)
@@ -255,7 +273,7 @@ function sortMoves(moves, gamestate, path) {
 			console.log("last color is 0")
 		}
 		for (var i = 0; i < moves.length; i++) {
-			if (toPureBottleMoves.includes(i)) {
+			if (toPureBottleSameColorMoves.includes(i) || toPureBottleMoves.includes(i)) {
 				continue
 			}
 			var from = moves[i][0]
@@ -268,7 +286,7 @@ function sortMoves(moves, gamestate, path) {
 	var emptyingMoves = []
 	if (path.length !== 0) {
 		for (var i = 0; i < moves.length; i++) {
-			if (toPureBottleMoves.includes(i) || sameColorMoves.includes(i)) {
+			if (toPureBottleSameColorMoves.includes(i) || toPureBottleMoves.includes(i) || sameColorMoves.includes(i)) {
 				continue
 			}
 			if (moves[0] == lastFrom) {
@@ -277,21 +295,9 @@ function sortMoves(moves, gamestate, path) {
 		}
 	}
 
-	var fillingMoves = []
-	if (path.length !== 0) {
-		for (var i = 0; i < moves.length; i++) {
-			if (toPureBottleMoves.includes(i) || sameColorMoves.includes(i) || emptyingMoves.includes(i)) {
-				continue
-			}
-			if (moves[1] == lastTo) {
-				fillingMoves.push(i)
-			}
-		}
-	}
-
 	var otherMoves = []
 	for (var i = 0; i < moves.length; i++) {
-		if (toPureBottleMoves.includes(i) || sameColorMoves.includes(i) || emptyingMoves.includes(i) || fillingMoves.includes(i)) {
+		if (toPureBottleSameColorMoves.includes(i) || toPureBottleMoves.includes(i) || sameColorMoves.includes(i) || emptyingMoves.includes(i)) {
 			continue
 		}
 		otherMoves.push(i)
@@ -299,10 +305,10 @@ function sortMoves(moves, gamestate, path) {
 	otherMoves.sort((a, b) => Math.abs(a - b))
 
 	var result = []
+	result.push(...toPureBottleSameColorMoves.map((i) => moves[i]))
 	result.push(...toPureBottleMoves.map((i) => moves[i]))
 	result.push(...sameColorMoves.map((i) => moves[i]))
 	result.push(...emptyingMoves.map((i) => moves[i]))
-	result.push(...fillingMoves.map((i) => moves[i]))
 	result.push(...otherMoves.map((i) => moves[i]))
 	return result
 }
