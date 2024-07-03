@@ -25,6 +25,8 @@ function generateNewPuzzle(height, width, empty) {
 
 	highlightedColumn = null
 
+	hintsRemaining = 5
+
 	var buffer = []
 	for (var i = 0; i < height; i++) {
 		for (var j = 0; j < width; j++) {
@@ -87,6 +89,7 @@ function draw() {
 	hintButton.textContent = "Hint (" + hintsRemaining + ")"
 
 	addColumnHighlighting()
+	newPuzzleButton.disabled = false
 }
 
 function getCurrentState() {
