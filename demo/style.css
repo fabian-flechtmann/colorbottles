@@ -47,51 +47,51 @@ a {
 }
 
 .color1 {
-	/* yellow */
-	background-color: #ffbe0b;
+	/* red */
+	background-color: #ff0303;
 }
 
 .color2 {
-	/* orange */
-	background-color: #f18701;
+	/* blue */
+	background-color: #0042ff;
 }
 
 .color3 {
-	/* red */
-	background-color: #e63946;
+	/* light blue */
+	background-color: #7ebff1;
 }
 
 .color4 {
 	/* purple */
-	background-color: #8338ec;
+	background-color: #86469c;
 }
 
 .color5 {
-	/* blue */
-	background-color: #3a86ff;
+	/* yellow */
+	background-color: #fefc00;
 }
 
 .color6 {
-	/* green */
-	background-color: #38b000;
+	/* orange */
+	background-color: #fe890d;
 }
 
 .color7 {
-	/* brown */
-	background-color: #a98467;
+	/* green */
+	background-color: #21bf00;
 }
 
 .color8 {
-	/* light blue */
-	background-color: #ade8f4;
+	/* pink */
+	background-color: #e45caf;
 }
 
 .color9 {
-	/* grey */
-	background-color: #8d99ae;
+	/* gray */
+	background-color: #939596;
 }
 
 .color10 {
-	/* slime */
-	background-color: #d9ed92;
+	/* teal */
+	background-color: #1be7ba;
 }
