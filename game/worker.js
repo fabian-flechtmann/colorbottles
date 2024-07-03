@@ -7,7 +7,6 @@ self.addEventListener(
 	function(e) {
 		const cmd = e.data.cmd
 		if (cmd === "solve") {
-			console.log("Worker got 'solve' cmd")
 			if (solver !== null) {
 				solver.stop()
 			}

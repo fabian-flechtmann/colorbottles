@@ -206,6 +206,7 @@ function getMoves(gamestate) {
 			for (var k = 0; k < fromColor[1]; k++) {
 				if (toBottle[toBottle.length - k - 1] !== 0) {
 					hasSpace = false
+					// need space for all of this color
 					break
 				}
 			}
@@ -223,10 +224,11 @@ function sortMoves(moves, gamestate, path) {
 	/*
 
 	Solutions become prettier when prioritising moves
-	1. Continuing with the same color
-	2. Continuing to empty the same bottle
-	3. Continuing to fill the same bottle
-	4. Move to pure bottle, rank by how full the bottle is already
+	1. Fill pure bottle, use same color as before
+	2. FIll pure bottle
+	2. Use same color as before
+	3. Keep emptying the same bottle
+	4. Keep filling the same bottle
 	5. All other moves, prefer to move to nearby column
 
 	*/
@@ -237,8 +239,26 @@ function sortMoves(moves, gamestate, path) {
 		var lastTo = path[path.length - 1][1]
 	}
 
+	var toPureBottleSameColorMoves = []
+	if (path.length !== 0) {
+		var lastColor = getTopColor(gamestate[lastTo])[0]
+		if (lastColor == 0) {
+			console.log("last color is 0")
+		}
+		for (var i = 0; i < moves.length; i++) {
+			var from = moves[i][0]
+			var to = moves[i][1]
+			if (lastColor === getTopColor(gamestate[from])[0] && isBottlePure(gamestate[to])) {
+				toPureBottleSameColorMoves.push(i)
+			}
+		}
+	}
+
 	var toPureBottleMoves = []
 	for (var i = 0; i < moves.length; i++) {
+		if (toPureBottleSameColorMoves.includes(i)) {
+			continue
+		}
 		var to = moves[i][1]
 		if (isBottlePure(gamestate[to])) {
 			toPureBottleMoves.push(i)
@@ -255,7 +275,7 @@ function sortMoves(moves, gamestate, path) {
 			console.log("last color is 0")
 		}
 		for (var i = 0; i < moves.length; i++) {
-			if (toPureBottleMoves.includes(i)) {
+			if (toPureBottleSameColorMoves.includes(i) || toPureBottleMoves.includes(i)) {
 				continue
 			}
 			var from = moves[i][0]
@@ -268,7 +288,7 @@ function sortMoves(moves, gamestate, path) {
 	var emptyingMoves = []
 	if (path.length !== 0) {
 		for (var i = 0; i < moves.length; i++) {
-			if (toPureBottleMoves.includes(i) || sameColorMoves.includes(i)) {
+			if (toPureBottleSameColorMoves.includes(i) || toPureBottleMoves.includes(i) || sameColorMoves.includes(i)) {
 				continue
 			}
 			if (moves[0] == lastFrom) {
@@ -277,21 +297,9 @@ function sortMoves(moves, gamestate, path) {
 		}
 	}
 
-	var fillingMoves = []
-	if (path.length !== 0) {
-		for (var i = 0; i < moves.length; i++) {
-			if (toPureBottleMoves.includes(i) || sameColorMoves.includes(i) || emptyingMoves.includes(i)) {
-				continue
-			}
-			if (moves[1] == lastTo) {
-				fillingMoves.push(i)
-			}
-		}
-	}
-
 	var otherMoves = []
 	for (var i = 0; i < moves.length; i++) {
-		if (toPureBottleMoves.includes(i) || sameColorMoves.includes(i) || emptyingMoves.includes(i) || fillingMoves.includes(i)) {
+		if (toPureBottleSameColorMoves.includes(i) || toPureBottleMoves.includes(i) || sameColorMoves.includes(i) || emptyingMoves.includes(i)) {
 			continue
 		}
 		otherMoves.push(i)
@@ -299,10 +307,10 @@ function sortMoves(moves, gamestate, path) {
 	otherMoves.sort((a, b) => Math.abs(a - b))
 
 	var result = []
+	result.push(...toPureBottleSameColorMoves.map((i) => moves[i]))
 	result.push(...toPureBottleMoves.map((i) => moves[i]))
 	result.push(...sameColorMoves.map((i) => moves[i]))
 	result.push(...emptyingMoves.map((i) => moves[i]))
-	result.push(...fillingMoves.map((i) => moves[i]))
 	result.push(...otherMoves.map((i) => moves[i]))
 	return result
 }
@@ -365,7 +373,6 @@ class Solver {
 	}
 	solve() {
 		this.todos.push([], this.initialGamestate)
-		var iterationCount = 0
 		while (this.todos.size() !== 0) {
 			var element = this.todos.pop()
 			var path = element[0]
@@ -375,16 +382,10 @@ class Solver {
 				continue
 			}
 			
-			if (iterationCount % 100000 === 0) {
-				console.log("Worker status:", iterationCount, this.todos.size(), this.seen.size(), path.length)
-			}
-			iterationCount += 1
-
 			if (isSolved(gamestate)) {
 				if (this.bestSolution === null || path.length < this.bestSolution.length) {
 					this.bestSolution = path
 					this.onNewSolutionFound(path)
-					console.log("Found", path.length, "step solution after", iterationCount, "iterations")
 					continue
 				}
 			}
@@ -402,10 +403,8 @@ class Solver {
 				this.todos.push(newPath, newState)
 			}
 		}
-		console.log("Worker finished after", iterationCount, "iterations")
 		this.onFinished()
-		return iterationCount
 	}
 }
 
-export { Solver, TodoQueue, TodoStack, TodoHeap, makeMove }
+export { Solver, TodoQueue, TodoStack, TodoHeap, getMoves, makeMove }

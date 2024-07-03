@@ -37,6 +37,11 @@ a {
 	padding: 20px 30px;
 }
 
+.box.highlight {
+	border-left-color: white;
+	border-right-color: white;
+}
+
 .first > .box {
 	border-top-color: black;
 	border-top-width: 3px;

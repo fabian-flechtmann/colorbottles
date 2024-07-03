@@ -1,31 +1,28 @@
-/*
-
-Have a table
-
-Have a loop: Generate puzzle, generate solution, play solution
-
-*/
-
-import { makeMove } from './engine.js'
+import { getMoves, makeMove } from './engine.js'
 
 var worker = null
 
 var puzzle = null
+var pastMoves = null
 var solution = null
-var nextMove = 0
+
+var highlightedColumn = null
 
 const gameTable = document.getElementById("gameTable")
 const statusLine = document.getElementById("statusLine")
 const newPuzzleButton = document.getElementById("newPuzzleButton")
-const nextStepButton = document.getElementById("nextStepButton")
-const prevStepButton = document.getElementById("prevStepButton")
+const undoButton = document.getElementById("undoButton")
+const hintButton = document.getElementById("hintButton")
 
 function generateNewPuzzle(height, width, empty) {
 	newPuzzleButton.disabled = true
+	undoButton.disabled = true
+	hintButton.disabled = true
 
-	puzzle = null
+	pastMoves = []
 	solution = null
-	nextMove = 0
+
+	highlightedColumn = null
 
 	var buffer = []
 	for (var i = 0; i < height; i++) {
@@ -52,19 +49,19 @@ function generateNewPuzzle(height, width, empty) {
 }
 
 function draw() {
-	if (solution === null) {		
-		nextStepButton.disabled = true
-		prevStepButton.disabled = true
-	} else {
-		statusLine.innerHTML = "Solution found, at step " + nextMove + " of " + solution.length
-		nextStepButton.disabled = nextMove === solution.length
-		prevStepButton.disabled = nextMove === 0
+	if (solution !== null) {
+		if (solution.length === 0) {
+			statusLine.innerHTML = "Puzzle is solved"
+		} else if (solution.length === 1) {
+			statusLine.innerHTML = "Puzzle can be solved in 1 move"
+		} else {
+			statusLine.innerHTML = "Puzzle can be solved in " + solution.length + " moves"
+		}
 	}
+	undoButton.disabled = pastMoves === null || pastMoves.length === 0
+	hintButton.disabled = solution === null || solution.length === 0
 
-	var state = puzzle
-	for (var i = 0; i < nextMove; i++) {
-		state = makeMove(solution[i], state)
-	}
+	var state = getCurrentState()
 
 	var width = state.length
 	var height = state[0].length
@@ -80,11 +77,25 @@ function draw() {
 		}
 		for (var j = 0; j < width; j++) {
 			var color = state[j][height-i-1]
-			result += `<td class="box color` + color + `"></td>`
+			var maybeHighlight = ""
+			if (highlightedColumn === j) {
+				maybeHighlight = ` highlight`
+			}
+			result += `<td class="box color` + color + maybeHighlight + `"></td>`
 		}
 		result += `</tr>`
 	}
 	gameTable.innerHTML = result
+
+	addColumnHighlighting()
+}
+
+function getCurrentState() {
+	var state = puzzle
+	for (var i = 0; i < pastMoves.length; i++) {
+		state = makeMove(pastMoves[i], state)
+	}
+	return state
 }
 
 function shuffle(array) {
@@ -107,7 +118,6 @@ function solve() {
 	statusLine.innerHTML = "Solving ..."
 
 	if (worker !== null) {
-		console.log("Terminating previous worker ...")
 		worker.terminate()
 	}
 
@@ -118,13 +128,13 @@ function solve() {
 		function(e) {
 			if (e.data.event == "solution") {
 				solution = e.data.data
-				console.log("Solution: " + JSON.stringify(solution))
 			}
 			else if (e.data.event == "finished") {
 				newPuzzleButton.disabled = false
 				if (solution === null) {
-					statusLine.innerHTML = "Puzzle could not be solved"
+					statusLine.innerHTML = "Puzzle can not be solved"
 				} else {
+					hintButton.disabled = false
 					draw()
 				}
 			}
@@ -132,27 +142,34 @@ function solve() {
 		false
 	)
 
-	worker.postMessage({"cmd": "solve", "algorithm": "bfs", "task": puzzle})
+	var state = getCurrentState()
+	worker.postMessage({"cmd": "solve", "algorithm": "bfs", "task": state})
 }
 
 newPuzzleButton.onclick = function() {
 	generateNewPuzzle(6, 8, 2)
-	draw()
 	solve()
-}
-
-nextStepButton.onclick = function() {
-	if (solution !== null && nextMove < solution.length) {
-		nextMove += 1
-	}
 	draw()
 }
 
-prevStepButton.onclick = function() {
-	if (solution !== null && 0 < nextMove) {
-		nextMove -= 1
+hintButton.onclick = function() {
+	if (solution !== null && solution.length != 0) {
+		var move = solution.shift()
+		pastMoves.push(move)
+		draw()
 	}
-	draw()
+}
+
+undoButton.onclick = function() {
+	if (pastMoves.length !== 0) {
+		var move = pastMoves.pop()
+		if (solution === null) {
+			solve()
+		} else {
+			solution.unshift(move)
+		}
+		draw()
+	}
 }
 
 window.addEventListener("keydown", function (event) {
@@ -164,10 +181,10 @@ window.addEventListener("keydown", function (event) {
 			newPuzzleButton.onclick()
 			break;
 		case "ArrowLeft":
-			prevStepButton.onclick()
+			undoButton.onclick()
 			break;
 		case "ArrowRight":
-			nextStepButton.onclick()
+			hintButton.onclick()
 			break;
 		default:
 			return;
@@ -176,6 +193,42 @@ window.addEventListener("keydown", function (event) {
   // Cancel the default action to avoid it being handled twice
   event.preventDefault();
 }, true);
+
+function onCellClick(td, columnIndex) {
+	return function() {
+		if (highlightedColumn === null) {
+			highlightedColumn = columnIndex
+		} else if (highlightedColumn === columnIndex) {
+			highlightedColumn = null
+		} else {
+			var state = getCurrentState()
+			var possibleMoves = getMoves(state)
+			var move = [highlightedColumn, columnIndex]
+			if (possibleMoves.find(x => x[0] === move[0] && x[1] === move[1]) !== undefined) {
+				highlightedColumn = null
+				pastMoves.push(move)
+				if (solution !==null && solution[0] === move) {
+					solution.unshift()
+				} else {
+					solution = null
+					solve()
+				}
+			}
+		}
+		draw()
+	}
+}
+
+function addColumnHighlighting() {
+	var trs = document.querySelectorAll("tr")
+	for (var i = 0; i < trs.length; i++) {
+		var tr = trs[i]
+		for (var j = 0; j < tr.children.length; j++) {
+			var td = tr.children[j]
+			td.onclick = onCellClick(td, j)
+		}
+	}
+}
 
 window.onload = function() {
 	newPuzzleButton.onclick()

@@ -223,10 +223,11 @@ function sortMoves(moves, gamestate, path) {
 	/*
 
 	Solutions become prettier when prioritising moves
-	1. Continuing with the same color
-	2. Continuing to empty the same bottle
-	3. Continuing to fill the same bottle
-	4. Move to pure bottle, rank by how full the bottle is already
+	1. Fill pure bottle, use same color as before
+	2. FIll pure bottle
+	2. Use same color as before
+	3. Keep emptying the same bottle
+	4. Keep filling the same bottle
 	5. All other moves, prefer to move to nearby column
 
 	*/
