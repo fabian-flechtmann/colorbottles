@@ -7,7 +7,7 @@ var pastMoves = null
 
 var highlightedColumn = null
 
-var hintsRemaining = 2
+var hintsRemaining = 5
 var currentlySolving = false
 
 const gameTable = document.getElementById("gameTable")
