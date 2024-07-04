@@ -1,7 +1,7 @@
 * {
 	color: #e3e6e8;
 	font-family: Verdana;
-	font-size: 4vmin;
+	font-size: 2vw;
 }
 
 body {
@@ -28,7 +28,7 @@ div.row {
 
 button {
 	width: 15vw;
-	height: 5vw;
+	aspect-ratio: 3;
 	border-style: solid #e3e6e8;
 	border-color: #e3e6e8;
 	background-color: inherit;
