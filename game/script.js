@@ -78,7 +78,7 @@ function draw() {
 		for (var j = 0; j < width; j++) {
 			var color = state[j][height-i-1]
 			var maybeHighlight = ""
-			if (highlightedColumn === j && color !== 0) {
+			if (highlightedColumn === j) {
 				maybeHighlight = ` highlight`
 			}
 			result += `<td class="box` + maybeHighlight + `"><div class="color` + color + `"></div></td>`
