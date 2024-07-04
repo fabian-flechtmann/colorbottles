@@ -1,6 +1,11 @@
+* {
+	color: #e3e6e8;
+	font-family: Verdana;
+	font-size: 4vmin;
+}
+
 body {
 	background-color: #424242;
-	color: #e3e6e8;
 }
 
 #gameTable {
@@ -17,17 +22,27 @@ body {
 
 div.row {
 	display: block;
-	padding-top: 2vw;
+	padding-top: 1vw;
 	padding-left: 2vw;
 }
 
-div.row > * {
-	margin-right: 3vw;
+button {
+	width: 15vw;
+	height: 5vw;
+	border-style: solid #e3e6e8;
+	border-color: #e3e6e8;
+	background-color: inherit;
+	border-radius: 1vw;
+}
+
+button:disabled {
+	color: #606060;
 }
 
 .box {
 	border-style: solid;
 	border-color: black;
+	border-radius: 1vw;
 }
 
 .box.highlight {
