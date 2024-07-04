@@ -81,7 +81,7 @@ function draw() {
 			if (highlightedColumn === j && color !== 0) {
 				maybeHighlight = ` highlight`
 			}
-			result += `<td class="box color` + color + maybeHighlight + `"></td>`
+			result += `<td class="box` + maybeHighlight + `"><div class="color` + color + `"></div></td>`
 		}
 		result += `</tr>`
 	}

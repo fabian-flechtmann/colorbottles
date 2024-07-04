@@ -31,22 +31,37 @@ button {
 	aspect-ratio: 3;
 	border-style: solid #e3e6e8;
 	border-color: #e3e6e8;
+	border-width: 0.5vw;
 	background-color: inherit;
 	border-radius: 1vw;
 }
 
 button:disabled {
+	border-color: #808080;
 	color: #606060;
 }
 
 .box {
 	border-style: solid;
-	border-color: black;
-	border-radius: 1vw;
+	border-color: #606060;
+	border-width: 0 0.5vw;
+	border-
+	z-index: 1;
+	background-color: #303030;
+}
+
+tr:last-child > .box {
+	border-bottom-width: 0.5vw;
 }
 
 .box.highlight {
 	border-color: white;
+}
+
+.box > div {
+	margin: 0 0.2vw;
+	min-height: 5vw;
+	border-radius: 1vw;
 }
 
 .color1 {
