@@ -1,4 +1,4 @@
-import { getMoves, makeMove, isSolved } from './engine.js'
+import { getMoves, makeMove, isSolved, isBottleEmpty } from './engine.js'
 
 var worker = null
 
@@ -207,7 +207,10 @@ function onCellClick(td, columnIndex) {
 			return
 		}
 		if (highlightedColumn === null) {
-			highlightedColumn = columnIndex
+			var state = getCurrentState()
+			if (!isBottleEmpty(state[columnIndex])) {
+				highlightedColumn = columnIndex
+			}
 		} else if (highlightedColumn === columnIndex) {
 			highlightedColumn = null
 		} else {
