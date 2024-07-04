@@ -52,7 +52,6 @@ function generateNewPuzzle(height, width, empty) {
 }
 
 function draw() {
-
 	undoButton.disabled = pastMoves === null || pastMoves.length === 0
 	hintButton.disabled = hintsRemaining === 0
 
@@ -85,10 +84,12 @@ function draw() {
 		result += `</tr>`
 	}
 	gameTable.innerHTML = result
+	addColumnHighlighting()
+
+	statusLine.innerHTML = ""
 
 	hintButton.textContent = "Hint (" + hintsRemaining + ")"
 
-	addColumnHighlighting()
 	newPuzzleButton.disabled = false
 }
 
