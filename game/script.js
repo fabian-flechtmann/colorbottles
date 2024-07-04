@@ -49,6 +49,7 @@ function generateNewPuzzle(height, width, empty) {
 	}
 	puzzle = result
 	console.log("Puzzle: " + JSON.stringify(puzzle))
+	statusLine.innerHTML = ""
 }
 
 function draw() {
@@ -172,6 +173,7 @@ hintButton.onclick = function() {
 
 undoButton.onclick = function() {
 	if (pastMoves.length !== 0) {
+		statusLine.innerHTML = ""
 		var move = pastMoves.pop()
 		draw()
 	}
