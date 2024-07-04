@@ -59,6 +59,7 @@ function draw() {
 
 	if (isSolved(state)) {
 		statusLine.innerHTML = "Puzzle is solved"
+		hintButton.disabled = true
 	}
 
 	var width = state.length
@@ -85,8 +86,6 @@ function draw() {
 	}
 	gameTable.innerHTML = result
 	addColumnHighlighting()
-
-	statusLine.innerHTML = ""
 
 	hintButton.textContent = "Hint (" + hintsRemaining + ")"
 
