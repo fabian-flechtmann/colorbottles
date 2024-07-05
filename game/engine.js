@@ -407,4 +407,4 @@ class Solver {
 	}
 }
 
-export { Solver, TodoQueue, TodoStack, TodoHeap, getMoves, makeMove, isSolved, isBottleEmpty }
+export { Solver, TodoQueue, TodoStack, TodoHeap, getMoves, makeMove, isSolved, isBottleEmpty, isBottleDone }
