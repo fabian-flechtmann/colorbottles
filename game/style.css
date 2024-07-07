@@ -9,7 +9,7 @@ body {
 }
 
 #gameTable {
-	border-spacing: 1.5vw 0;
+	border-spacing: 4vw 0;
 	float: none;
 	width: 100%;
 	aspect-ratio: 3;
@@ -23,11 +23,19 @@ body {
 div.row {
 	display: block;
 	padding-top: 1vw;
-	padding-left: 1.5vw;
+	padding-left: 4vw;
+	width: 90.8vw;
+}
+
+div.row > a > img {
+	padding-top: 1.5vw;
+	float: right;
+	height: 2vw;
+	width: 2vw;
 }
 
 button {
-	width: 15.2vw;
+	width: 14vw;
 	aspect-ratio: 3;
 	border-style: solid #e3e6e8;
 	border-color: #e3e6e8;
@@ -61,9 +69,12 @@ tr:last-child > .box {
 }
 
 .box > div {
-	margin: 0 0.2vw;
-	min-height: 5.2vw;
-	border-radius: 1vw;
+	min-height: 5.25vw;
+}
+
+tr:last-child > .box > div {
+	border-bottom-right-radius: 1vw;
+	border-bottom-left-radius: 1vw;
 }
 
 .color1 {
