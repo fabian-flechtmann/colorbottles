@@ -53,12 +53,16 @@ function generateNewPuzzle(height, width, empty) {
 }
 
 function draw() {
-	undoButton.disabled = pastMoves === null || pastMoves.length === 0
-	hintButton.disabled = hintsRemaining === 0
+    var state = getCurrentState()
 
-	var state = getCurrentState()
+    const isGameStart = pastMoves === null || pastMoves.length === 0
+    const isGameSolved = isSolved(state)
 
-	if (isSolved(state)) {
+    newPuzzleButton.disabled = !(isGameStart || isGameSolved)
+	undoButton.disabled = isGameStart
+	hintButton.disabled = hintsRemaining === 0 || isGameSolved
+
+	if (isGameSolved) {
 		statusLine.innerHTML = "Puzzle is solved"
 		hintButton.disabled = true
 	}
@@ -89,8 +93,6 @@ function draw() {
 	addColumnHighlighting()
 
 	hintButton.textContent = "Hint (" + hintsRemaining + ")"
-
-	newPuzzleButton.disabled = false
 }
 
 function getCurrentState() {
@@ -174,7 +176,7 @@ hintButton.onclick = function() {
 undoButton.onclick = function() {
 	if (pastMoves.length !== 0) {
 		statusLine.innerHTML = ""
-		var move = pastMoves.pop()
+		pastMoves.pop()
 		draw()
 	}
 }
@@ -201,28 +203,28 @@ window.addEventListener("keydown", function (event) {
   event.preventDefault();
 }, true);
 
-function onCellClick(td, columnIndex) {
+function onCellClick(td, clickedColumn) {
 	return function() {
 		if (currentlySolving) {
 			return
 		}
 		if (highlightedColumn === null) {
-			var state = getCurrentState()
-			var bottle = state[columnIndex]
-			if (!isBottleEmpty(bottle) && !isBottleDone(bottle)) {
-				highlightedColumn = columnIndex
-			}
-		} else if (highlightedColumn === columnIndex) {
+			highlightedColumn = clickedColumn
+		} else if (highlightedColumn === clickedColumn) {
 			highlightedColumn = null
 		} else {
 			var state = getCurrentState()
 			var possibleMoves = getMoves(state)
-			var move = [highlightedColumn, columnIndex]
-			if (possibleMoves.find(x => x[0] === move[0] && x[1] === move[1]) !== undefined) {
+			var move = [highlightedColumn, clickedColumn]
+            const isValidMove = possibleMoves.find(x => x[0] === move[0] && x[1] === move[1]) !== undefined
+            const isFullBottleMove = isBottleDone(state[highlightedColumn]) && isBottleEmpty(state[clickedColumn])
+			if (isValidMove || isFullBottleMove) {
 				highlightedColumn = null
 				pastMoves.push(move)
 				statusLine.innerHTML = ""
-			}
+			} else {
+                highlightedColumn = clickedColumn
+            }
 		}
 		draw()
 	}
