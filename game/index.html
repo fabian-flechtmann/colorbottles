@@ -1,9 +1,36 @@
 <html>
 
 <head>
-<link rel="icon" href="favicon.png" type="image/png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A water sort color bottles puzzle game. Sort each color into its own column!">
+<meta name="theme-color" content="#424242">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Color Bottles">
+
+<title>Color Bottles Puzzle</title>
+
+<link rel="icon" href="pwa/favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="pwa/favicon.png">
+<link rel="manifest" href="pwa/manifest.json">
 <link rel="stylesheet" href="style.css">
+
 <script type="module" src="script.js"></script>
+<script>
+  // Register service worker for PWA functionality
+  if ('serviceWorker' in navigator) {
+	window.addEventListener('load', () => {
+	  navigator.serviceWorker.register('./pwa/sw.js')
+		.then((registration) => {
+		  console.log('SW registered: ', registration);
+		})
+		.catch((registrationError) => {
+		  console.log('SW registration failed: ', registrationError);
+		});
+	});
+  }
+</script>
 </head>
 
 <body>

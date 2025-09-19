@@ -2,6 +2,7 @@
 	color: #e3e6e8;
 	font-family: Verdana;
 	font-size: 2vw;
+	white-space: nowrap;
 }
 
 body {
@@ -37,7 +38,7 @@ div.row > a > img {
 button {
 	width: 14vw;
 	aspect-ratio: 3;
-	border-style: solid #e3e6e8;
+	border-style: solid;
 	border-color: #e3e6e8;
 	border-width: 0.5vw;
 	background-color: inherit;
@@ -53,7 +54,6 @@ button:disabled {
 	border-style: solid;
 	border-color: #606060;
 	border-width: 0 0.4vw;
-	border-
 	z-index: 1;
 	background-color: #303030;
 }

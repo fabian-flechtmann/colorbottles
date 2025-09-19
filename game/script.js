@@ -53,12 +53,12 @@ function generateNewPuzzle(height, width, empty) {
 }
 
 function draw() {
-    var state = getCurrentState()
+	var state = getCurrentState()
 
-    const isGameStart = pastMoves === null || pastMoves.length === 0
-    const isGameSolved = isSolved(state)
+	const isGameStart = pastMoves === null || pastMoves.length === 0
+	const isGameSolved = isSolved(state)
 
-    newPuzzleButton.disabled = !(isGameStart || isGameSolved)
+	newPuzzleButton.disabled = !(isGameStart || isGameSolved)
 	undoButton.disabled = isGameStart
 	hintButton.disabled = hintsRemaining === 0 || isGameSolved
 
@@ -109,13 +109,13 @@ function shuffle(array) {
   // While there remain elements to shuffle...
   while (currentIndex != 0) {
 
-    // Pick a remaining element...
-    let randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex--;
+	// Pick a remaining element...
+	let randomIndex = Math.floor(Math.random() * currentIndex);
+	currentIndex--;
 
-    // And swap it with the current element.
-    [array[currentIndex], array[randomIndex]] = [
-      array[randomIndex], array[currentIndex]];
+	// And swap it with the current element.
+	[array[currentIndex], array[randomIndex]] = [
+	  array[randomIndex], array[currentIndex]];
   }
 }
 
@@ -216,15 +216,15 @@ function onCellClick(td, clickedColumn) {
 			var state = getCurrentState()
 			var possibleMoves = getMoves(state)
 			var move = [highlightedColumn, clickedColumn]
-            const isValidMove = possibleMoves.find(x => x[0] === move[0] && x[1] === move[1]) !== undefined
-            const isFullBottleMove = isBottleDone(state[highlightedColumn]) && isBottleEmpty(state[clickedColumn])
+			const isValidMove = possibleMoves.find(x => x[0] === move[0] && x[1] === move[1]) !== undefined
+			const isFullBottleMove = isBottleDone(state[highlightedColumn]) && isBottleEmpty(state[clickedColumn])
 			if (isValidMove || isFullBottleMove) {
 				highlightedColumn = null
 				pastMoves.push(move)
 				statusLine.innerHTML = ""
 			} else {
-                highlightedColumn = clickedColumn
-            }
+				highlightedColumn = clickedColumn
+			}
 		}
 		draw()
 	}
