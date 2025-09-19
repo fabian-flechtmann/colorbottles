@@ -1,4 +1,4 @@
-const CACHE_NAME = 'color-bottles-v2';
+const CACHE_NAME = 'color-bottles-v3';
 const urlsToCache = [
   '../',
   '../index.html',
